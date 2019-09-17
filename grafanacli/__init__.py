@@ -109,9 +109,33 @@ class GrafanaAdmin(object):
         run = self.Session.get('{0}/api/teams/search?name={1}'.format(self.url, teamName))
         return(run.json())
 
-    def TeamAdd(self, teamName,):
+    def TeamAdd(self, teamName):
         json_data = {"name": "{0}".format(teamName)}
         run = self.Session.post('{0}/api/teams'.format(self.url), json=json_data)
+        return(run.json())
+
+    def FolderList(self):
+        url_search = self.url + '/api/folders'
+        run = self.Session.get(url_search)
+        return(run.json())
+
+    def FolderCreate(self, folderName):
+        json_data = {"title": "{0}".format(folderName)}
+        run = self.Session.post('{0}/api/folders'.format(self.url), data=json_data)
+        return(run.json())
+
+    def FolderGetPermissions(self, folderUid):
+        run = self.Session.get('{0}/api/folders/{1}/permissions'.format(self.url, folderUid))
+        return(run.json())
+
+    def FolderSetPermissions(self, folderUid, json):
+        run = self.Session.post('{0}/api/folders/{1}/permissions'.format(self.url, folderUid), json=json)
+        return(run.json())
+
+    def FolderSearch(self, title):
+        url_search = self.url + '/api/search?type=dash-folder'
+        url_search = url_search + '&query={0}'.format(title)
+        run = self.Session.get(url_search)
         return(run.json())
 
     def DashboardSearch(self, **kwargs):
@@ -234,4 +258,3 @@ class GrafanaAdmin(object):
         run = self.Session.post(
             '{0}/api/plugins/alexanderzobnin-zabbix-app/settings'.format(self.url), json=json_data)
         return(run.json())
-
